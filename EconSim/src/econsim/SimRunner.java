@@ -19,7 +19,7 @@ public class SimRunner {
     static Random rand = new Random(2222);
     static ArrayList<ReqTransfer> reqList = new ArrayList<ReqTransfer>();
     static ArrayList<Firm> firms = new ArrayList<Firm>();
-    private static ArrayList<Person> people = new ArrayList<Person>();
+    static ArrayList<Person> people = new ArrayList<Person>();
     private static ArrayList<Integer> assetList = new ArrayList<Integer>();
     private static ArrayList<Boolean> marketMap = new ArrayList<Boolean>();
     
@@ -44,11 +44,12 @@ public class SimRunner {
                 {
                     firms.get(turnIndex-(people.size()-1)).takeTurn();
                 }
-            }
+            }//end of taking turns
+            
+            
             //complete all request
             int originalRequestSize = reqList.size();
             int requestIndex = 0;
-            
             
             for(ReqTransfer currentRequest: reqList)
             {
@@ -63,7 +64,7 @@ public class SimRunner {
                         if(firms.get(currentRequest.getFinNum()).getAvailableUnitsProduced()>0)
                         {
                             people.get(currentRequest.getInitNum()).changeMonetaryValue(-1* firms.get(currentRequest.getFinNum()).getProductPrice());
-                            firms.get(currentRequest.getFinNum()).changeNumAssets(1);
+                            firms.get(currentRequest.getFinNum()).sellAsset();
                             
                         }
                     }
@@ -74,8 +75,7 @@ public class SimRunner {
                         firms.get(currentRequest.getFinNum()).incRequested(1);
                         if(firms.get(currentRequest.getFinNum()).getAvailableUnitsProduced()>0)
                         {
-                            firms.get(currentRequest.getInitNum()).changeLiquidity(-1* firms.get(currentRequest.getFinNum()).getProductPrice());
-                            firms.get(currentRequest.getFinNum()).changeNumAssets(1);
+                            firms.get(currentRequest.getInitNum()).buyCapital(firms.get(currentRequest.getFinNum()).sellAsset());
                         }
                         else
                         {
@@ -85,27 +85,10 @@ public class SimRunner {
                     }
                 }
                 requestIndex++;
-            }
-            
-            /*
-            while(requestIndex < reqList.size()||requestIndex< 10*originalRequestSize); 
-            {
-                if(!reqList.get(requestIndex).isInitFirm())//if its a peoples request
-                {
-                    if(reqList.get)
-                }
-                else
-                {
-                        System.out.println("test");
-                }
-            }//list of requests
-            
-                    */
+            }//end of the requests
             reqList.clear();
             marketMap.clear();
-        }
-        
-        // TODO code application logic here
+        }//end of the cycle 
     }//main
     
     

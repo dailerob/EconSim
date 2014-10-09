@@ -21,7 +21,6 @@ public class Firm {
     double liquidity = 0.0;
     double productPrice = 0.0;
     double productValue; //average standard value seen in the market
-    double priceChange = 0.0;//base amount for price change per cycle
     double MC = 0.0;
     double UMC; //Unit Material Cost
     double PVratio; //price to value ratio
@@ -34,20 +33,26 @@ public class Firm {
 
     //worker production variables
     // output = employeeList.size()*(-1* Math.abs(deltaE*(employeeList.size()-maxEsize))+maxE) = x(-|b(x-a)|+c)
-    int deltaE = 0;//b
-    int maxEsize = 0;//a
-    int maxE = 0;//c
+    double deltaE = 0;//b
+    double maxEsize = 0;//a
+    double maxE = 0;//c
     //employeeList.size() -->> x number of employes
 
     public Firm(int firmNum) {
         productPrice = 100;
         liquidity = 10000;
-        productValue = 1;///////////////set to a random
+        productValue = 100 + rand.nextGaussian()*33;
         this.firmNum = firmNum;
+        availableUnitsProduced = 0;
         for (int a = 0; a < 200; a++) {
             products.add(new Asset(firmNum, productValue));
+            availableUnitsProduced++;
         }
-
+        maxE = 5;
+        deltaE = .8;
+        maxEsize = .9;
+        employeeSalary = 100; 
+        
     }
 
     public void takeTurn() {
@@ -70,14 +75,14 @@ public class Firm {
     }
 
     public int unitsToProduce() {
-        producingUnits = unitsProduced;
+        producingUnits = (int)(calcCapitalValue()/UMC);
         boolean exitFlag = false;
         while (producingUnits < 10000 && exitFlag== false) {
             if (MC < productPrice) {
                 producingUnits++;
             } else {
                 if (productPrice > UMC*lowestMarketUnitCost()) {
-                    if(employeeSalary /(maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize))) + UMC * lowestMarketUnitCost() < productPrice){
+                    if(employeeSalary /((maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize)))*100/productValue) + UMC * lowestMarketUnitCost() < productPrice){
                         employeeList.add(rand.nextDouble()*(SimRunner.people.size()-1));
                     }
                     else
@@ -97,9 +102,18 @@ public class Firm {
 
     private void calculateMC() {
         MC = UMC * lowestMarketUnitCost();
-        if (employeeList.size() * (-1 * Math.abs(deltaE * (employeeList.size() - maxEsize)) + maxE) <= producingUnits - 1) {
+        if (calcEmployeeOutput() <= producingUnits) {
             MC += employeeSalary;
         }
+    }
+    
+    private double calcEmployeeOutput(){
+        double employeeOutput = 0;
+        for(int x = 0; x< employeeList.size(); x++)
+        {
+            employeeOutput+= (-1 * Math.abs(deltaE * (x - maxEsize)) + maxE)*100/productValue;
+        }
+        return employeeOutput; 
     }
 
     private void increasePrice() {
@@ -109,19 +123,26 @@ public class Firm {
     private void decreasePrice() {
         productPrice *= .975;
     }
-
-    private void convertCapital()// turns all the firm's capital into the product it produces
+    
+    
+    private double calcCapitalValue()
     {
         double capitalValue = 0.0;
         for (Asset capitalItem : capital) {
             capitalValue += capitalItem.getValue();
         }
+        return capitalValue; 
+    }
+
+    private void convertCapital()// turns all the firm's capital into the product it produces
+    {
+        double capitalValue = calcCapitalValue();
 
         capital.clear();
 
-        while (UMC * productValue < capitalValue) {
+        while (UMC * productValue <= capitalValue) {
             capitalValue -= (UMC * productValue);
-            products.add(new Asset(firmNum));
+            products.add(new Asset(firmNum,productValue));
             unitsProduced++;
             availableUnitsProduced++;
         }
@@ -197,6 +218,7 @@ public class Firm {
     public Asset sellAsset ()
     {
         liquidity+=productPrice;
+        availableUnitsProduced--; 
         return products.remove(products.size()-1);
     }
     
