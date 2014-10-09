@@ -14,22 +14,22 @@ import java.util.Random;
 public class Firm {
 
     Random rand = new Random(3333);
-    int firmNum;
+    private int firmNum;
     ArrayList<Double> employeeList = new ArrayList<Double>();
     ArrayList<Asset> capital = new ArrayList<Asset>();
     ArrayList<Asset> products = new ArrayList<Asset>();
-    double liquidity = 0.0;
-    double productPrice = 0.0;
-    double productValue; //average standard value seen in the market
-    double MC = 0.0;
-    double UMC; //Unit Material Cost
-    double PVratio; //price to value ratio
-    int availableUnitsProduced; //total in storage
-    int unitsProduced; //units produced in the currect cycle 
-    int unitsRequested; //per cycle
-    int requestDeficit; //per cycle (unitsProduced-unitsRequested
-    int producingUnits; //used to check how many units to produce before MC greater than marketPrice. 
-    double employeeSalary; //per cycle
+    private double liquidity = 0.0;
+    private double productPrice = 0.0;
+    private double productValue; //average standard value seen in the market
+    private double MC = 0.0;
+    private double UMC; //Unit Material Cost
+    private double PVratio; //price to value ratio
+    private int availableUnitsProduced; //total in storage
+    private int unitsProduced; //units produced in the currect cycle 
+    private int unitsRequested; //per cycle
+    private int requestDeficit; //per cycle (unitsProduced-unitsRequested
+    private int producingUnits; //used to check how many units to produce before MC greater than marketPrice. 
+    private double employeeSalary; //per cycle
 
     //worker production variables
     // output = employeeList.size()*(-1* Math.abs(deltaE*(employeeList.size()-maxEsize))+maxE) = x(-|b(x-a)|+c)
@@ -150,10 +150,15 @@ public class Firm {
 
     public void makeRequests() {
         double availibleLiquid = liquidity;
-        for (int x = 0; x < unitsToProduce(); x++) {
+        int requestSize = 0;
+        while(availibleLiquid> 0 && requestSize < unitsToProduce())
+        {
+            requestSize++;
             availibleLiquid -= (UMC * lowestMarketUnitCost());
         }
 
+        SimRunner.reqList.add(new ReqTransfer(true,firmNum,true,lowestMUCfirm(),requestSize));
+        
     }
 
     public double calcPV() {
@@ -170,7 +175,7 @@ public class Firm {
         return lowestValue;
     }
 
-    public int lowesMUCfirm() {
+    public int lowestMUCfirm() {
         double lowestValue = 100000;
         int firmNumber = 0;
         for (Firm index : SimRunner.firms) {

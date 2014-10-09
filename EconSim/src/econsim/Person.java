@@ -13,11 +13,13 @@ import java.util.Random;
  */
 public class Person {
     
+    int personNum = 0;
+    ArrayList<Firm> firmsViewed = new ArrayList<Firm>();
     ArrayList<Asset> PersonalItems =  new ArrayList<Asset>();
     private double monetaryValue;// total cash the person has on hand
     private double expectedIncome;// income the person expectedly earns
     private boolean hasIncome; //weather the person is recieveing income
-    public double StandardSR; //the ratio the person has to reach the standard doubling value
+    public double standardSR; //the ratio the person has to reach the standard doubling value
     public double doubleValue; // the amount of iterations for average units to double in value
     public double standardDB; // the standard amount of time it takes a average units to double value
     public double savingsRatio; // the actual ratio being saved by people 
@@ -26,16 +28,20 @@ public class Person {
     
     
     
-    public Person()
+    public Person(int personNum)
     {
+        this.personNum = personNum;
         double monetaryValue = 10000;
+        double expectedIncome  = 100;
+        standardSR = 10; 
+        standardDB = 100;
     }
     
     
     
     
     
-    public double CalcUnitValue(Asset currentAsset)
+    public double calcUnitValue(Asset currentAsset)
     {
         double timeValue = CalculateTimeValue();
         double assetValue = currentAsset.getValue(); 
@@ -57,12 +63,37 @@ public class Person {
     
     private double doubleValue()
     {
-        return (standardDB*StandardSR/savingsRatio);
+        return (standardDB*standardSR/savingsRatio);
     }
     
     public void takeTurn()
     {
         
+        double lowestPV = 1; 
+        int firmNum = 0; 
+        firmsViewed.clear();
+        for(int currentFirm = 0; currentFirm < 10; currentFirm++)
+        {
+            firmsViewed.add(SimRunner.firms.get((int)(rand.nextDouble() * (SimRunner.firms.size()-1))));
+        }
+        
+        for (Firm currentFirm : firmsViewed) 
+        {
+            if (currentFirm.getProductPrice() / calcUnitValue(currentFirm.viewAsset()) < lowestPV) 
+            {
+                if (currentFirm.getProductPrice() < monetaryValue) 
+                {
+                    lowestPV = currentFirm.getProductPrice() / calcUnitValue(currentFirm.viewAsset());
+                    firmNum = currentFirm.getFirmNum();
+                }
+
+            }
+        }//looks through the current set of firms
+        
+        if(lowestPV < 1)
+        {
+            SimRunner.reqList.add(new ReqTransfer(false,personNum, true, firmNum, 1));
+        }
     }
 
     public double getMonetaryValue() {

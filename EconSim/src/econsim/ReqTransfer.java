@@ -11,13 +11,20 @@ package econsim;
  * @author Roberto
  */
 public class ReqTransfer {
+
     
+    public ReqTransfer(boolean initFirm, int initNum, boolean finfirm, int finNum, int numMoved) {
+        this.initFirm = initFirm;
+        this.initNum = initNum;
+        this.finfirm = finfirm;
+        this.finNum = finNum;
+        this.numMoved = numMoved;
+    }
     
     boolean initFirm; 
     int initNum; 
     boolean finfirm; 
     int finNum; 
-    
     int numMoved; 
 
     public boolean isInitFirm() {
