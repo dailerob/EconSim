@@ -49,7 +49,7 @@ public class Firm {
             availableUnitsProduced++;
         }
         maxE = 9;
-        deltaE = .856;
+        deltaE = .075;
         maxEsize = 5;
         employeeSalary = 100; 
         UMC = .5;
@@ -91,7 +91,8 @@ public class Firm {
                 producingUnits++;
             } else {
                 if (productPrice > UMC*lowestMarketUnitCost()) {
-                    if(employeeSalary /((maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize)))*100/productValue) + UMC * lowestMarketUnitCost() < productPrice){
+                    double bradleyint = ((maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize)))*100/productValue) + UMC * lowestMarketUnitCost();
+                    if(bradleyint > 0 && employeeSalary /bradleyint < productPrice ){
                         employeeList.add((int)(rand.nextDouble()*(SimRunner.people.size()-1)));
                     }
                     else

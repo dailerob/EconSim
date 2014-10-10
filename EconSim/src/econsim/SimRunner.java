@@ -69,7 +69,7 @@ public class SimRunner {
             
             while(requestIndex < reqList.size()&& requestIndex < 10*originalRequestSize)    
             {
-                if(requestIndex>500)
+                if(requestIndex%500==1)
                 {
                     System.out.println("here");
                 }
@@ -101,6 +101,7 @@ public class SimRunner {
                         {
                             firms.get(currentRequest.getFinNum()).incRequested(currentAsset-1);
                             firms.get(currentRequest.getInitNum()).makeRequests();
+                            currentAsset = -1;//breaks the forLoop
                         }
                     }
                 }
