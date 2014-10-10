@@ -49,15 +49,16 @@ public class SimRunner {
             while(marketMap.size()>0)
             {
                 int turnIndex = (int)(rand.nextDouble()*(marketMap.size()-1));
-                marketMap.remove(turnIndex);
-                if(turnIndex < people.size())
+                if(marketMap.get(turnIndex) < people.size())
                 {
                     people.get(marketMap.get(turnIndex)).takeTurn();
                 }
                 else
                 {
-                    firms.get(marketMap.get(turnIndex)).takeTurn();
+                    firms.get(marketMap.get(turnIndex)-(people.size())).takeTurn();
                 }
+                marketMap.remove(turnIndex);
+                System.out.println("maketMap size: " + marketMap.size());
             }//end of taking turns
              
             System.out.println("test2");
@@ -66,10 +67,9 @@ public class SimRunner {
             int originalRequestSize = reqList.size();
             int requestIndex = 0;
             
-            for(ReqTransfer currentRequest: reqList)
+            while(requestIndex < reqList.size()&& requestIndex < 10*originalRequestSize)    
             {
-                if(requestIndex >=  10 * originalRequestSize)
-                    break;
+                ReqTransfer currentRequest = reqList.get(requestIndex);
                 
                 if(!currentRequest.isInitFirm())
                 {
@@ -100,6 +100,7 @@ public class SimRunner {
                     }
                 }
                 requestIndex++;
+                System.out.println(requestIndex);
             }//end of the requests
             reqList.clear();
             marketMap.clear();
@@ -115,8 +116,6 @@ public class SimRunner {
             marketMap.add(currentIndex);
             currentIndex++;
         }
-
-        currentIndex = 0;
         for (Firm firmIndex : firms) {     
             marketMap.add(currentIndex);
             currentIndex++;

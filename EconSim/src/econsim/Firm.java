@@ -41,7 +41,7 @@ public class Firm {
     public Firm(int firmNum) {
         productPrice = 100;
         liquidity = 10000;
-        productValue = 100 + rand.nextGaussian()*33;
+        productValue = Math.abs(100 + rand.nextGaussian()*33);
         this.firmNum = firmNum;
         availableUnitsProduced = 0;
         for (int a = 0; a < 200; a++) {
@@ -52,6 +52,7 @@ public class Firm {
         deltaE = .8;
         maxEsize = .9;
         employeeSalary = 100; 
+        UMC = .5;
         
     }
 
@@ -163,7 +164,7 @@ public class Firm {
     public void makeRequests() {
         double availibleLiquid = liquidity;
         int requestSize = 0;
-        while(availibleLiquid> 0 && requestSize < unitsToProduce())
+        while(availibleLiquid > (UMC * lowestMarketUnitCost()) && requestSize < unitsToProduce())
         {
             requestSize++;
             availibleLiquid -= (UMC * lowestMarketUnitCost());

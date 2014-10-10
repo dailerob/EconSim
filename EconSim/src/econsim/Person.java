@@ -35,6 +35,7 @@ public class Person {
         double expectedIncome  = 100;
         standardSR = 10; 
         standardDB = 100;
+        timeSincePurchase = 0;
     }
     
     
@@ -48,12 +49,12 @@ public class Person {
         double personalAssetValue = rand.nextGaussian()*(assetValue/3);
         
         
-        return timeValue*assetValue*personalAssetValue; 
+        return timeValue*Math.abs(assetValue+personalAssetValue); 
     }
     
     private  double CalculateTimeValue()
     {
-        return Math.pow(2,(timeSincePurchase*(1/doubleValue)));
+        return Math.pow(2,(timeSincePurchase*(1/doubleValue())));
     }
     
     private double CalculateSR()
@@ -68,7 +69,7 @@ public class Person {
     
     public void takeTurn()
     {
-        
+        savingsRatio = CalculateSR();
         double lowestPV = 1; 
         int firmNum = 0; 
         firmsViewed.clear();
@@ -92,7 +93,11 @@ public class Person {
         
         if(lowestPV < 1)
         {
+            timeSincePurchase = 0;
             SimRunner.reqList.add(new ReqTransfer(false,personNum, true, firmNum, 1));
+        }
+        else{
+            timeSincePurchase++;
         }
     }
 
