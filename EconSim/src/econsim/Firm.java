@@ -41,7 +41,7 @@ public class Firm {
 
     public Firm(int firmNum) {
         productPrice = 100;
-        liquidity = 10000;
+        liquidity = 100000;
         productValue = Math.abs(100 + rand.nextGaussian()*33);
         this.firmNum = firmNum;
         availableUnitsProduced = 0;
@@ -58,7 +58,8 @@ public class Firm {
     }
 
     public void takeTurn() {
-        requestDeficit = unitsRequested - unitsProduced;
+        requestDeficit = unitsRequested - (int)((double)calcCapitalValue()/(double)UMC);
+        //requestDeficit = unitsRequested - products.size();
         unitsRequested = 0;
         unitsProduced = 0;//set the initial units produced for the cycle 
         for(int currentEmployee: employeeList)
@@ -71,10 +72,10 @@ public class Firm {
         convertCapital();//add to the product what was created the previous time. 
 
         //Price adjustment
-        if (requestDeficit > 0) {
+        if (requestDeficit < 0) {
             decreasePrice();
         } else {
-            if (requestDeficit < 0) {
+            if (requestDeficit > 0) {
                 increasePrice();
             }
         }//end of price adjustment
@@ -132,11 +133,11 @@ public class Firm {
     }
 
     private void increasePrice() {
-        productPrice *= 1.025;
+        productPrice *= 1.05;
     }
 
     private void decreasePrice() {
-        productPrice *= .975;
+        productPrice *= .95;
     }
     
     
@@ -257,4 +258,14 @@ public class Firm {
     public void addCapital(Asset cap) {
         capital.add(cap);
     }
+
+    public double getLiquidity() {
+        return liquidity;
+    }
+
+    public int getUnitsRequested() {
+        return unitsRequested;
+    }
+    
+    
 }//class Firm
