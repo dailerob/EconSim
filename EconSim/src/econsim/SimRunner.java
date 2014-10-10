@@ -29,7 +29,7 @@ public class SimRunner {
     
     
     public static void main(String[] args) {
-        System.out.println("test");
+        
         int totalCycles = 1000;
         
         for(int x = 0; x < 100; x++)
@@ -42,10 +42,12 @@ public class SimRunner {
             people.add(new Person(x));
         }
         
+        
         for (int cycleIndex  = 0;cycleIndex < totalCycles; cycleIndex++)
         {
             //complete all takeTurns
             fillMarketMap();
+            //System.out.println("test");
             while(marketMap.size()>0)
             {
                 int turnIndex = (int)(rand.nextDouble()*(marketMap.size()-1));
@@ -58,10 +60,10 @@ public class SimRunner {
                     firms.get(marketMap.get(turnIndex)-(people.size())).takeTurn();
                 }
                 marketMap.remove(turnIndex);
-                System.out.println("maketMap size: " + marketMap.size());
+                //System.out.println("maketMap size: " + marketMap.size());
             }//end of taking turns
              
-            System.out.println("test2");
+            //System.out.println("test2");
             
             //complete all request
             int originalRequestSize = reqList.size();
@@ -71,7 +73,7 @@ public class SimRunner {
             {
                 if(requestIndex%500==1)
                 {
-                    System.out.println("here");
+                    //System.out.println("here");
                 }
                 
                 ReqTransfer currentRequest = reqList.get(requestIndex);
@@ -106,10 +108,10 @@ public class SimRunner {
                     }
                 }
                 requestIndex++;
-                System.out.println(requestIndex);
+                //System.out.println(requestIndex);
             }//end of the requests
-            reqList.clear();
-            marketMap.clear();
+            reqList = new ArrayList<ReqTransfer>();
+            marketMap = new ArrayList<Integer>();
             
             System.out.println("firm 10's product price: " + firms.get(10).getProductPrice());
         }//end of the cycle 

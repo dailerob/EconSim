@@ -30,6 +30,7 @@ public class Firm {
     private int requestDeficit; //per cycle (unitsProduced-unitsRequested
     private int producingUnits; //used to check how many units to produce before MC greater than marketPrice. 
     private double employeeSalary; //per cycle
+    private double LMUC; //lowestmarketUnitCost
 
     //worker production variables
     // output = employeeList.size()*(-1* Math.abs(deltaE*(employeeList.size()-maxEsize))+maxE) = x(-|b(x-a)|+c)
@@ -48,9 +49,9 @@ public class Firm {
             products.add(new Asset(firmNum, productValue));
             availableUnitsProduced++;
         }
-        maxE = 9;
-        deltaE = .075;
-        maxEsize = 5;
+        maxE = 2;
+        deltaE = .01;
+        maxEsize = 10;
         employeeSalary = 100; 
         UMC = .5;
         
@@ -90,8 +91,8 @@ public class Firm {
             if (MC < productPrice) {
                 producingUnits++;
             } else {
-                if (productPrice > UMC*lowestMarketUnitCost()) {
-                    double bradleyint = ((maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize)))*100/productValue) + UMC * lowestMarketUnitCost();
+                if (productPrice > UMC*LMUC) {
+                    double bradleyint = ((maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize)))*100/productValue) + UMC * LMUC;
                     if(bradleyint > 0 && employeeSalary /bradleyint < productPrice ){
                         employeeList.add((int)(rand.nextDouble()*(SimRunner.people.size()-1)));
                     }
@@ -115,7 +116,7 @@ public class Firm {
     }
 
     private void calculateMC() {
-        MC = UMC * lowestMarketUnitCost();
+        MC = UMC * LMUC;
         if (calcEmployeeOutput(employeeList.size()) <= (producingUnits+(int)(calcCapitalValue()/UMC))) {
             MC += employeeSalary;
         }
@@ -131,7 +132,7 @@ public class Firm {
     }
 
     private void increasePrice() {
-        productPrice *= 1.25;
+        productPrice *= 1.025;
     }
 
     private void decreasePrice() {
@@ -163,12 +164,14 @@ public class Firm {
     }
 
     public void makeRequests() {
+        LMUC = lowestMarketUnitCost();
         double availibleLiquid = liquidity;
         int requestSize = 0;
-        while(availibleLiquid > (UMC * lowestMarketUnitCost()) && requestSize < unitsToProduce())
+        int unitsToRequest = unitsToProduce();
+        while(availibleLiquid > (UMC * LMUC) && requestSize < unitsToRequest)
         {
             requestSize++;
-            availibleLiquid -= (UMC * lowestMarketUnitCost());
+            availibleLiquid -= (UMC * LMUC);
         }
 
         SimRunner.reqList.add(new ReqTransfer(true,firmNum,true,lowestMUCfirm(),requestSize));
@@ -231,7 +234,7 @@ public class Firm {
     
     public Asset viewAsset()
     {
-        return products.get(1);
+        return new Asset(firmNum, productValue);
     }
     
     public Asset sellAsset ()
