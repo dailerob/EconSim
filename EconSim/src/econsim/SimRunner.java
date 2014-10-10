@@ -21,12 +21,26 @@ public class SimRunner {
     static ArrayList<Firm> firms = new ArrayList<Firm>();
     static ArrayList<Person> people = new ArrayList<Person>();
     private static ArrayList<Integer> assetList = new ArrayList<Integer>();
-    private static ArrayList<Boolean> marketMap = new ArrayList<Boolean>();
+    private static ArrayList<Integer> marketMap = new ArrayList<Integer>();
+    
+    
+    
+    
     
     
     public static void main(String[] args) {
+        System.out.println("test");
         int totalCycles = 1000;
         
+        for(int x = 0; x < 100; x++)
+        {
+           firms.add(new Firm(x));
+        }
+        
+        for(int x = 0; x< 10000; x++)
+        {
+            people.add(new Person(x));
+        }
         
         for (int cycleIndex  = 0;cycleIndex < totalCycles; cycleIndex++)
         {
@@ -36,16 +50,17 @@ public class SimRunner {
             {
                 int turnIndex = (int)(rand.nextDouble()*(marketMap.size()-1));
                 marketMap.remove(turnIndex);
-                if(turnIndex >= people.size())
+                if(turnIndex < people.size())
                 {
-                    people.get(turnIndex).takeTurn();
+                    people.get(marketMap.get(turnIndex)).takeTurn();
                 }
                 else
                 {
-                    firms.get(turnIndex-(people.size()-1)).takeTurn();
+                    firms.get(marketMap.get(turnIndex)).takeTurn();
                 }
             }//end of taking turns
-            
+             
+            System.out.println("test2");
             
             //complete all request
             int originalRequestSize = reqList.size();
@@ -88,18 +103,23 @@ public class SimRunner {
             }//end of the requests
             reqList.clear();
             marketMap.clear();
+            
+            System.out.println("firm 10's product price: " + firms.get(10).getProductPrice());
         }//end of the cycle 
     }//main
     
     
     public static void fillMarketMap() {
-        
+        int currentIndex = 0;
         for (Person peopleIndex : people) {
-            marketMap.add(false);
+            marketMap.add(currentIndex);
+            currentIndex++;
         }
 
-        for (Firm firmIndex : firms) {
-            marketMap.add(true);
+        currentIndex = 0;
+        for (Firm firmIndex : firms) {     
+            marketMap.add(currentIndex);
+            currentIndex++;
         }
     }
 }//simRunner

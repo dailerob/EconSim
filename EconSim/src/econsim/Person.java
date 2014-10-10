@@ -24,7 +24,7 @@ public class Person {
     public double standardDB; // the standard amount of time it takes a average units to double value
     public double savingsRatio; // the actual ratio being saved by people 
     public int timeSincePurchase; //iterations since the persons last puchase
-    Random rand = new Random(1111);
+    Random rand = new Random();
     
     
     

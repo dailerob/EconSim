@@ -13,9 +13,9 @@ import java.util.Random;
  */
 public class Firm {
 
-    Random rand = new Random(3333);
+    Random rand = new Random();
     private int firmNum;
-    ArrayList<Double> employeeList = new ArrayList<Double>();
+    ArrayList<Integer> employeeList = new ArrayList<Integer>();
     ArrayList<Asset> capital = new ArrayList<Asset>();
     ArrayList<Asset> products = new ArrayList<Asset>();
     private double liquidity = 0.0;
@@ -59,6 +59,13 @@ public class Firm {
         requestDeficit = unitsRequested - unitsProduced;
         unitsRequested = 0;
         unitsProduced = 0;//set the initial units produced for the cycle 
+        for(int currentEmployee: employeeList)
+        {
+            if(liquidity>= employeeSalary){
+                liquidity-=employeeSalary;
+                SimRunner.people.get(currentEmployee).changeMonetaryValue(employeeSalary);
+            }
+        }
         convertCapital();//add to the product what was created the previous time. 
 
         //Price adjustment
@@ -78,12 +85,13 @@ public class Firm {
         producingUnits = (int)(calcCapitalValue()/UMC);
         boolean exitFlag = false;
         while (producingUnits < 10000 && exitFlag== false) {
+            calculateMC();
             if (MC < productPrice) {
                 producingUnits++;
             } else {
                 if (productPrice > UMC*lowestMarketUnitCost()) {
                     if(employeeSalary /((maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize)))*100/productValue) + UMC * lowestMarketUnitCost() < productPrice){
-                        employeeList.add(rand.nextDouble()*(SimRunner.people.size()-1));
+                        employeeList.add((int)(rand.nextDouble()*(SimRunner.people.size()-1)));
                     }
                     else
                     {
@@ -97,19 +105,23 @@ public class Firm {
             }
         }
         
-        return producingUnits;
+        if(employeeList.size()>0)
+            if(calcEmployeeOutput(employeeList.size()-1)>(producingUnits+(int)(calcCapitalValue()/UMC))){
+                employeeList.remove(0);
+            }
+        return producingUnits - (int)(calcCapitalValue()/UMC);
     }
 
     private void calculateMC() {
         MC = UMC * lowestMarketUnitCost();
-        if (calcEmployeeOutput() <= producingUnits) {
+        if (calcEmployeeOutput(employeeList.size()) <= (producingUnits+(int)(calcCapitalValue()/UMC))) {
             MC += employeeSalary;
         }
     }
     
-    private double calcEmployeeOutput(){
+    private double calcEmployeeOutput( int numEmployees){
         double employeeOutput = 0;
-        for(int x = 0; x< employeeList.size(); x++)
+        for(int x = 0; x< numEmployees; x++)
         {
             employeeOutput+= (-1 * Math.abs(deltaE * (x - maxEsize)) + maxE)*100/productValue;
         }
