@@ -69,6 +69,11 @@ public class SimRunner {
             
             while(requestIndex < reqList.size()&& requestIndex < 10*originalRequestSize)    
             {
+                if(requestIndex>500)
+                {
+                    System.out.println("here");
+                }
+                
                 ReqTransfer currentRequest = reqList.get(requestIndex);
                 
                 if(!currentRequest.isInitFirm())

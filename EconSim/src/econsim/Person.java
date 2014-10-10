@@ -31,8 +31,8 @@ public class Person {
     public Person(int personNum)
     {
         this.personNum = personNum;
-        double monetaryValue = 10000;
-        double expectedIncome  = 100;
+        monetaryValue = 10000;
+        expectedIncome  = 100;
         standardSR = 10; 
         standardDB = 100;
         timeSincePurchase = 0;
@@ -80,7 +80,9 @@ public class Person {
         
         for (Firm currentFirm : firmsViewed) 
         {
-            if (currentFirm.getProductPrice() / calcUnitValue(currentFirm.viewAsset()) < lowestPV) 
+            double valued = calcUnitValue(currentFirm.viewAsset());
+            
+            if (currentFirm.getProductPrice() / valued < lowestPV) 
             {
                 if (currentFirm.getProductPrice() < monetaryValue) 
                 {

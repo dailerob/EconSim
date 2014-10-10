@@ -23,7 +23,7 @@ public class Firm {
     private double productValue; //average standard value seen in the market
     private double MC = 0.0;
     private double UMC; //Unit Material Cost
-    private double PVratio; //price to value ratio
+    //private double PVratio; //price to value ratio
     private int availableUnitsProduced; //total in storage
     private int unitsProduced; //units produced in the currect cycle 
     private int unitsRequested; //per cycle
@@ -48,9 +48,9 @@ public class Firm {
             products.add(new Asset(firmNum, productValue));
             availableUnitsProduced++;
         }
-        maxE = 5;
-        deltaE = .8;
-        maxEsize = .9;
+        maxE = 9;
+        deltaE = .856;
+        maxEsize = 5;
         employeeSalary = 100; 
         UMC = .5;
         
