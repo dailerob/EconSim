@@ -112,13 +112,17 @@ public class SimRunner {
                 }
             }//end of the requests
             double avgprice = 0.0;
-            for(Firm cfirm: firms)
+            double totalSavings = 0.0;
+            for(Firm cfirm: firms){
+                //totalSavings += cfirm.getLiquidity();
                 avgprice+=cfirm.getProductPrice();
+            }
+                
             
             avgprice/= firms.size();
             //System.out.println("");
             //System.out.println("request size: " + reqList.size()+" price: " + firms.get(10).getProductPrice() + " unitsAvailible: " + firms.get(10).getAvailableUnitsProduced() + " liquidity: " + firms.get(10).getLiquidity() + " unitsRequested: " + firms.get(10).getUnitsRequested());
-            System.out.println("Request Size: " + reqList.size() + " average price : " + avgprice);
+            System.out.println("Request Size: " + reqList.size() + " total savings: " + (int)totalSavings + " average price : " + avgprice);
             //System.out.println("");
             reqList = new ArrayList<ReqTransfer>();
             marketMap = new ArrayList<Integer>();

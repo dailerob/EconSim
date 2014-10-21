@@ -34,7 +34,7 @@ public class Person {
         monetaryValue = 10000;
         expectedIncome  = 100;
         standardSR = 10; 
-        standardDB = 100;
+        standardDB = 10;
         timeSincePurchase = 0;
     }
     
