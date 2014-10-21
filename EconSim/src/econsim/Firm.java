@@ -40,9 +40,9 @@ public class Firm {
     //employeeList.size() -->> x number of employes
 
     public Firm(int firmNum) {
-        productPrice = 100;
+        productPrice = 90;
         liquidity = 100000;
-        productValue = Math.abs(100 + rand.nextGaussian()*33);
+        productValue = Math.abs(90 + rand.nextGaussian()*33);
         this.firmNum = firmNum;
         availableUnitsProduced = 0;
         for (int a = 0; a < 200; a++) {
@@ -111,6 +111,9 @@ public class Firm {
                 if (productPrice > UMC*LMUC) {
                     if(calcEmployeeOutput(employeeList.size()+1)>0&&employeeSalary/calcEmployeeOutput(employeeList.size()+1)+UMC*LMUC<productPrice)
                         employeeList.add((int)(rand.nextDouble()*(SimRunner.people.size()-1)));
+                    else{
+                        exitFlag = true; 
+                    }
                 } else {
                     //produce less units
                     exitFlag = true; 

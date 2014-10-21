@@ -45,9 +45,10 @@ public class SimRunner {
         
         for (int cycleIndex  = 0;cycleIndex < totalCycles; cycleIndex++)
         {
+            //System.out.println("test");
             if(cycleIndex%10 == 1)
             {
-                System.out.print("");
+               // System.out.print("");
             }
             //complete all takeTurns
             fillMarketMap();
@@ -66,8 +67,6 @@ public class SimRunner {
                 marketMap.remove(turnIndex);
                 //System.out.println("maketMap size: " + marketMap.size());
             }//end of taking turns
-             
-            //System.out.println("test2");
             
             //complete all request
             int originalRequestSize = reqList.size();
@@ -109,14 +108,15 @@ public class SimRunner {
                 }
                 requestIndex++;
                 if(requestIndex%1000==0){
-                  System.out.print(".");   
+                  //System.out.print(".");   
                 }
             }//end of the requests
+            
+            //System.out.println("");
+            System.out.println("request size: " + reqList.size()+" price: " + firms.get(10).getProductPrice() + " unitsAvailible: " + firms.get(10).getAvailableUnitsProduced() + " liquidity: " + firms.get(10).getLiquidity() + " unitsRequested: " + firms.get(10).getUnitsRequested());
+            //System.out.println("");
             reqList = new ArrayList<ReqTransfer>();
             marketMap = new ArrayList<Integer>();
-            System.out.println("");
-            System.out.println("price: " + firms.get(10).getProductPrice() + " unitsAvailible: " + firms.get(10).getAvailableUnitsProduced() + " liquidity: " + firms.get(10).getLiquidity() + " unitsRequested: " + firms.get(10).getUnitsRequested());
-            System.out.println("");
         }//end of the cycle 
     }//main
     

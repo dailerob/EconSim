@@ -86,7 +86,7 @@ public class Person {
             {
                 if (currentFirm.getProductPrice() < monetaryValue) 
                 {
-                    lowestPV = currentFirm.getProductPrice() / calcUnitValue(currentFirm.viewAsset());
+                    lowestPV = currentFirm.getProductPrice() / valued;
                     firmNum = currentFirm.getFirmNum();
                 }
 
