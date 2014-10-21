@@ -83,6 +83,22 @@ public class Firm {
         makeRequests();
 
     }
+    
+    public void makeRequests() {
+        LMUC = lowestMarketUnitCost();
+        double availibleLiquid = liquidity;
+        int requestSize = 0;
+        int unitsToRequest = unitsToProduce();
+        fireEmployees();
+        while(availibleLiquid > (UMC * LMUC) && requestSize < unitsToRequest)
+        {
+            requestSize++;
+            availibleLiquid -= (UMC * LMUC);
+        }
+
+        SimRunner.reqList.add(new ReqTransfer(true,firmNum,true,lowestMUCfirm(),requestSize));
+        
+    }
 
     public int unitsToProduce() {
         producingUnits = (int)(calcCapitalValue()/UMC);
@@ -93,43 +109,59 @@ public class Firm {
                 producingUnits++;
             } else {
                 if (productPrice > UMC*LMUC) {
-                    double bradleyint = ((maxE- Math.abs(deltaE*(employeeList.size()+1- maxEsize)))*100/productValue) + UMC * LMUC;
-                    if(bradleyint > 0 && employeeSalary /bradleyint < productPrice ){
+                    if(calcEmployeeOutput(employeeList.size()+1)>0&&employeeSalary/calcEmployeeOutput(employeeList.size()+1)+UMC*LMUC<productPrice)
                         employeeList.add((int)(rand.nextDouble()*(SimRunner.people.size()-1)));
-                    }
-                    else
-                    {
-                        exitFlag = true;
-                    }
-                    //check if adding worker would increase profit
                 } else {
                     //produce less units
                     exitFlag = true; 
                 }
             }
         }
-        
+        return producingUnits - (int)(calcCapitalValue()/UMC);
+    }
+    
+    public void fireEmployees()
+    {
         if(employeeList.size()>0)
-            if(calcEmployeeOutput(employeeList.size()-1)>(producingUnits+(int)(calcCapitalValue()/UMC))){
+            if(calcLaborOutput(employeeList.size()-1)>(producingUnits+(int)(calcCapitalValue()/UMC))){
                 employeeList.remove(0);
             }
-        return producingUnits - (int)(calcCapitalValue()/UMC);
+        
+    }
+    
+    private double calcEmployeeOutput (int numEmployees)
+    {
+        return (-1 * Math.abs(deltaE * ((double)numEmployees - maxEsize)) + maxE)/productValue*100;
+    }
+    
+    private double calcLaborOutput( int numEmployees){
+        double employeeOutput = 0;
+        for(int x = 0; x< numEmployees; x++)
+        {
+            employeeOutput+= (-1 * Math.abs(deltaE * ((double)x - maxEsize)) + maxE)/productValue*100;
+        }
+        return employeeOutput; 
+    }
+    
+    private void convertCapital()// turns all the firm's capital into the product it produces
+    {
+        double capitalValue = calcCapitalValue();
+
+        capital.clear();
+
+        while (UMC * productValue <= capitalValue) {
+            capitalValue -= (UMC * productValue);
+            products.add(new Asset(firmNum,productValue));
+            unitsProduced++;
+            availableUnitsProduced++;
+        }
     }
 
     private void calculateMC() {
         MC = UMC * LMUC;
-        if (calcEmployeeOutput(employeeList.size()) <= (producingUnits+(int)(calcCapitalValue()/UMC))) {
+        if (calcLaborOutput(employeeList.size()) <= (producingUnits+(int)(calcCapitalValue()/UMC))) {
             MC += employeeSalary;
         }
-    }
-    
-    private double calcEmployeeOutput( int numEmployees){
-        double employeeOutput = 0;
-        for(int x = 0; x< numEmployees; x++)
-        {
-            employeeOutput+= (-1 * Math.abs(deltaE * (x - maxEsize)) + maxE)*100/productValue;
-        }
-        return employeeOutput; 
     }
 
     private void increasePrice() {
@@ -148,35 +180,6 @@ public class Firm {
             capitalValue += capitalItem.getValue();
         }
         return capitalValue; 
-    }
-
-    private void convertCapital()// turns all the firm's capital into the product it produces
-    {
-        double capitalValue = calcCapitalValue();
-
-        capital.clear();
-
-        while (UMC * productValue <= capitalValue) {
-            capitalValue -= (UMC * productValue);
-            products.add(new Asset(firmNum,productValue));
-            unitsProduced++;
-            availableUnitsProduced++;
-        }
-    }
-
-    public void makeRequests() {
-        LMUC = lowestMarketUnitCost();
-        double availibleLiquid = liquidity;
-        int requestSize = 0;
-        int unitsToRequest = unitsToProduce();
-        while(availibleLiquid > (UMC * LMUC) && requestSize < unitsToRequest)
-        {
-            requestSize++;
-            availibleLiquid -= (UMC * LMUC);
-        }
-
-        SimRunner.reqList.add(new ReqTransfer(true,firmNum,true,lowestMUCfirm(),requestSize));
-        
     }
 
     public double calcPV() {
