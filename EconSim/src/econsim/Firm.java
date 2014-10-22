@@ -25,7 +25,6 @@ public class Firm {
     private double UMC; //Unit Material Cost
     //private double PVratio; //price to value ratio
     private int availableUnitsProduced; //total in storage
-    private int unitsProduced; //units produced in the currect cycle 
     private int unitsRequested; //per cycle
     private int requestDeficit; //per cycle (unitsProduced-unitsRequested
     private int producingUnits; //used to check how many units to produce before MC greater than marketPrice. 
@@ -53,7 +52,7 @@ public class Firm {
         deltaE = .01;
         maxEsize = 10;
         employeeSalary = 90; 
-        UMC = .7;
+        UMC = .15;
         
     }
 
@@ -61,7 +60,6 @@ public class Firm {
         requestDeficit = unitsRequested - (int)((double)calcCapitalValue()/(double)UMC);
         //requestDeficit = unitsRequested - products.size();
         unitsRequested = 0;
-        unitsProduced = 0;//set the initial units produced for the cycle 
         for(int currentEmployee: employeeList)
         {
             if(liquidity>= employeeSalary){
@@ -154,8 +152,7 @@ public class Firm {
 
         while (UMC * productValue <= capitalValue) {
             capitalValue -= (UMC * productValue);
-            products.add(new Asset(firmNum,productValue));
-            unitsProduced++;
+            products.add(new Asset(firmNum,productValue,productPrice));
             availableUnitsProduced++;
         }
     }
@@ -253,7 +250,7 @@ public class Firm {
     
     public void buyCapital (Asset cap)
     {
-        liquidity-=cap.getValue();
+        liquidity-=cap.getSellPrice();
         capital.add(cap);   
     }
 

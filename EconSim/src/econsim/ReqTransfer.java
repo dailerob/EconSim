@@ -26,6 +26,8 @@ public class ReqTransfer {
     boolean finfirm; 
     int finNum; 
     int numMoved; 
+    
+    
 
     public boolean isInitFirm() {
         return initFirm;
@@ -45,5 +47,44 @@ public class ReqTransfer {
 
     public int getNumMoved() {
         return numMoved;
+    }
+    
+    
+    
+    public void carryOutRequest()
+    {
+        Firm finalFirm = SimRunner.firms.get(finNum);
+        if(!initFirm)
+        {
+            Person initPerson  = SimRunner.people.get(initNum);
+            if(initPerson.getMonetaryValue()>finalFirm.getProductPrice()){
+                finalFirm.incRequested(1);
+                if(finalFirm.getAvailableUnitsProduced()>0)
+                {
+                    initPerson.buyAsset(finalFirm.sellAsset());
+                }
+            }
+            
+        }
+        else {
+            Firm initFirm = SimRunner.firms.get(initNum);
+            for (int currentAsset = 0; currentAsset < numMoved; currentAsset++)
+            {
+                if (initFirm.getLiquidity() > finalFirm.getProductPrice()) 
+                {
+                    finalFirm.incRequested(1);
+                    if (finalFirm.getAvailableUnitsProduced() > 0) {
+                        initFirm.buyCapital(finalFirm.sellAsset());
+                    }
+                    else
+                    {
+                        finalFirm.incRequested(numMoved-(currentAsset+1));
+                        currentAsset = numMoved;//exits the forloop
+                        
+                    }
+                }
+            }
+        }
+        
     }
 }//Reqtransfer-- end of class

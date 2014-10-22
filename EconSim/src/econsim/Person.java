@@ -111,4 +111,9 @@ public class Person {
         monetaryValue+=change; 
     }
     
+    public void buyAsset(Asset taken)
+    {
+        monetaryValue-= taken.getSellPrice();
+    }
+    
 }//class person

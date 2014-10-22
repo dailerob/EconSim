@@ -25,6 +25,13 @@ public class Asset {
         assetNum = typenum;
         this.value = value; 
     }
+    
+        public Asset (int typenum, double value, double sellPrice)
+    {
+        assetNum = typenum;
+        this.value = value; 
+        this.sellPrice = sellPrice;
+    }
 
     public int getAssetNum() {
         return assetNum;
