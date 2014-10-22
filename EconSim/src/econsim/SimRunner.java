@@ -69,10 +69,53 @@ public class SimRunner {
             }//end of taking turns
             
             //complete all request
-            int originalRequestSize = reqList.size();
-            int requestIndex = 0;
+            makeRequests();
             
-            while(requestIndex < reqList.size()&& requestIndex < 10*originalRequestSize)    
+            double avgprice = 0.0;
+            double totalSavings = 0.0;
+            double personalMonetary = 0.0;
+            double totalCapital = 0.0;
+            for(Firm cfirm: firms){
+                totalSavings += cfirm.getLiquidity();
+                avgprice+=cfirm.getProductPrice();
+                totalCapital += cfirm.unitsAvailible();
+                
+            }
+            for(Person cperson: people)
+            {
+                personalMonetary+= cperson.getMonetaryValue();
+            }
+                
+            
+            avgprice/= firms.size();
+            //System.out.println("");
+            //System.out.println("request size: " + reqList.size()+" price: " + firms.get(10).getProductPrice() + " unitsAvailible: " + firms.get(10).getAvailableUnitsProduced() + " liquidity: " + firms.get(10).getLiquidity() + " unitsRequested: " + firms.get(10).getUnitsRequested());
+            System.out.println("Request Size: " + reqList.size() + " total savings: " + (int)totalSavings + " totalPersonalsavings: " + (int) personalMonetary + " total capital: " + (int)totalCapital + " average price : " + avgprice);
+            //System.out.println("");
+            reqList = new ArrayList<ReqTransfer>();
+            marketMap = new ArrayList<Integer>();
+        }//end of the cycle 
+    }//main
+    
+    
+    public static void fillMarketMap() {
+        int currentIndex = 0;
+        for (Person peopleIndex : people) {
+            marketMap.add(currentIndex);
+            currentIndex++;
+        }
+        for (Firm firmIndex : firms) {     
+            marketMap.add(currentIndex);
+            currentIndex++;
+        }
+    }
+    
+    public static void makeRequests()
+    {
+        int originalRequestSize = reqList.size();
+        int requestIndex = 0;
+        
+        while(requestIndex < reqList.size()&& requestIndex < 10*originalRequestSize)    
             {
                 
                 ReqTransfer currentRequest = reqList.get(requestIndex);
@@ -111,34 +154,5 @@ public class SimRunner {
                   //System.out.print(".");   
                 }
             }//end of the requests
-            double avgprice = 0.0;
-            double totalSavings = 0.0;
-            for(Firm cfirm: firms){
-                //totalSavings += cfirm.getLiquidity();
-                avgprice+=cfirm.getProductPrice();
-            }
-                
-            
-            avgprice/= firms.size();
-            //System.out.println("");
-            //System.out.println("request size: " + reqList.size()+" price: " + firms.get(10).getProductPrice() + " unitsAvailible: " + firms.get(10).getAvailableUnitsProduced() + " liquidity: " + firms.get(10).getLiquidity() + " unitsRequested: " + firms.get(10).getUnitsRequested());
-            System.out.println("Request Size: " + reqList.size() + " total savings: " + (int)totalSavings + " average price : " + avgprice);
-            //System.out.println("");
-            reqList = new ArrayList<ReqTransfer>();
-            marketMap = new ArrayList<Integer>();
-        }//end of the cycle 
-    }//main
-    
-    
-    public static void fillMarketMap() {
-        int currentIndex = 0;
-        for (Person peopleIndex : people) {
-            marketMap.add(currentIndex);
-            currentIndex++;
-        }
-        for (Firm firmIndex : firms) {     
-            marketMap.add(currentIndex);
-            currentIndex++;
-        }
     }
 }//simRunner

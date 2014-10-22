@@ -42,7 +42,7 @@ public class Firm {
     public Firm(int firmNum) {
         productPrice = 90;
         liquidity = 100000;
-        productValue = Math.abs(90 + rand.nextGaussian()*33);
+        productValue = Math.abs(50 + rand.nextGaussian()*33);
         this.firmNum = firmNum;
         availableUnitsProduced = 0;
         for (int a = 0; a < 200; a++) {
@@ -52,8 +52,8 @@ public class Firm {
         maxE = 2;
         deltaE = .01;
         maxEsize = 10;
-        employeeSalary = 100; 
-        UMC = .5;
+        employeeSalary = 90; 
+        UMC = .7;
         
     }
 
@@ -273,5 +273,9 @@ public class Firm {
         return unitsRequested;
     }
     
+    public int unitsAvailible()
+    {
+        return products.size() + (int)(calcCapitalValue()/productPrice);
+    }
     
 }//class Firm

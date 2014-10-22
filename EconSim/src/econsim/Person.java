@@ -34,7 +34,7 @@ public class Person {
         monetaryValue = 10000;
         expectedIncome  = 100;
         standardSR = 10; 
-        standardDB = 10;
+        standardDB = 3;
         timeSincePurchase = 0;
     }
     
@@ -80,13 +80,12 @@ public class Person {
         
         for (Firm currentFirm : firmsViewed) 
         {
-            double valued = calcUnitValue(currentFirm.viewAsset());
-            
-            if (currentFirm.getProductPrice() / valued < lowestPV) 
+            double currentPV = currentFirm.calcPV();
+            if (currentPV < lowestPV && currentFirm.unitsAvailible()>0) 
             {
                 if (currentFirm.getProductPrice() < monetaryValue) 
                 {
-                    lowestPV = currentFirm.getProductPrice() / valued;
+                    lowestPV = currentPV;
                     firmNum = currentFirm.getFirmNum();
                 }
 
