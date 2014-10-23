@@ -39,9 +39,10 @@ public class Firm {
     //employeeList.size() -->> x number of employes
 
     public Firm(int firmNum) {
-        productPrice = 90;
+        
         liquidity = 100000;
         productValue = Math.abs(90 + rand.nextGaussian()*33);
+        productPrice = productValue;
         this.firmNum = firmNum;
         availableUnitsProduced = 0;
         for (int a = 0; a < 200; a++) {
