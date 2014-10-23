@@ -41,7 +41,7 @@ public class Firm {
     public Firm(int firmNum) {
         productPrice = 90;
         liquidity = 100000;
-        productValue = Math.abs(50 + rand.nextGaussian()*33);
+        productValue = Math.abs(90 + rand.nextGaussian()*33);
         this.firmNum = firmNum;
         availableUnitsProduced = 0;
         for (int a = 0; a < 200; a++) {
@@ -52,7 +52,7 @@ public class Firm {
         deltaE = .01;
         maxEsize = 10;
         employeeSalary = 90; 
-        UMC = .15;
+        UMC = .5;
         
     }
 

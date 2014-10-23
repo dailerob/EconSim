@@ -84,11 +84,11 @@ public class SimRunner {
         double avgprice = 0.0;
             double totalSavings = 0.0;
             double personalMonetary = 0.0;
-            double totalCapital = 0.0;
+            double totalCapital = 0;
             for(Firm cfirm: firms){
                 totalSavings += cfirm.getLiquidity();
                 avgprice+=cfirm.getProductPrice();
-                totalCapital += cfirm.unitsAvailible();
+                totalCapital += (double)cfirm.unitsAvailible();
                 
             }
             for(Person cperson: people)
