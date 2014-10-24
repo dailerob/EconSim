@@ -49,17 +49,18 @@ public class Firm {
             products.add(new Asset(firmNum, productValue));
             availableUnitsProduced++;
         }
+        unitsRequested = 200;
         maxE = 2;
         deltaE = .01;
         maxEsize = 10;
         employeeSalary = 90; 
-        UMC = .5;
+        UMC = .15;
         
     }
 
     public void takeTurn() {
         requestDeficit = unitsRequested - (int)((double)calcCapitalValue()/(double)UMC);
-        //requestDeficit = unitsRequested - products.size();
+        requestDeficit = unitsRequested - products.size();
         unitsRequested = 0;
         for(int currentEmployee: employeeList)
         {
@@ -95,8 +96,8 @@ public class Firm {
             availibleLiquid -= (UMC * LMUC);
         }
 
-        SimRunner.reqList.add(new ReqTransfer(true,firmNum,true,lowestMUCfirm(),requestSize));
-        
+        if(requestSize>0)
+            SimRunner.reqList.add(new ReqTransfer(true,firmNum,true,lowestMUCfirm(),requestSize));   
     }
 
     public int unitsToProduce() {
@@ -166,11 +167,11 @@ public class Firm {
     }
 
     private void increasePrice() {
-        productPrice *= 1.05;
+        productPrice = Math.abs(productPrice * 1.05);
     }
 
     private void decreasePrice() {
-        productPrice *= .95;
+        productPrice = Math.abs(productPrice * .95);
     }
     
     
@@ -224,18 +225,6 @@ public class Firm {
     public void incRequested(int inc) {
         unitsRequested+=inc;
     }
-
-    public void changeNumAssets(int change) {
-
-        while (change > 0) {
-            if (availableUnitsProduced > 0) {
-                products.remove(products.size() - 1);
-            }
-            availableUnitsProduced--;
-            change--;
-        }
-
-    }
     
     public Asset viewAsset()
     {
@@ -246,6 +235,7 @@ public class Firm {
     {
         liquidity+=productPrice;
         availableUnitsProduced--; 
+        products.get(products.size()-1).setSellPrice(productPrice);
         return products.remove(products.size()-1);
     }
     
@@ -253,10 +243,6 @@ public class Firm {
     {
         liquidity-=cap.getSellPrice();
         capital.add(cap);   
-    }
-
-    public void changeLiquidity(double change) {
-        liquidity += change;
     }
 
     public void addCapital(Asset cap) {

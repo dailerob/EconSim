@@ -26,7 +26,7 @@ public class SimRunner {
     
     public static void main(String[] args) {
         
-        int totalCycles = 1000;
+        int totalCycles = 10000;
         
         for(int x = 0; x < 100; x++)
         {
@@ -82,11 +82,12 @@ public class SimRunner {
     public static void printData()
     {
         double avgprice = 0.0;
-            double totalSavings = 0.0;
+            double totalLiquidity = 0.0;
             double personalMonetary = 0.0;
             double totalCapital = 0;
+            double totalSavings = 0;
             for(Firm cfirm: firms){
-                totalSavings += cfirm.getLiquidity();
+                totalLiquidity += cfirm.getLiquidity();
                 avgprice+=cfirm.getProductPrice();
                 totalCapital += (double)cfirm.unitsAvailible();
                 
@@ -96,11 +97,12 @@ public class SimRunner {
                 personalMonetary+= cperson.getMonetaryValue();
             }
                 
+            totalSavings = totalLiquidity + personalMonetary;
             
             avgprice/= firms.size();
             //System.out.println("");
             //System.out.println("request size: " + reqList.size()+" price: " + firms.get(10).getProductPrice() + " unitsAvailible: " + firms.get(10).getAvailableUnitsProduced() + " liquidity: " + firms.get(10).getLiquidity() + " unitsRequested: " + firms.get(10).getUnitsRequested());
-            System.out.println("Request Size: " + reqList.size() + " total savings: " + (int)totalSavings + " totalPersonalsavings: " + (int) personalMonetary + " total capital: " + (int)totalCapital + " average price : " + avgprice);
+            System.out.println("Request Size:    " + reqList.size() + "    total savings:   " + (int)totalSavings + "    totalLiquidity:    " + (int)totalLiquidity +"    totalPersonalsavings:    " + (int) personalMonetary + "    total capital:    " + (int)totalCapital + "    average price :    " + avgprice);
             //System.out.println("");
     }
     

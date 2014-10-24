@@ -79,8 +79,7 @@ public class ReqTransfer {
                     else
                     {
                         finalFirm.incRequested(numMoved-(currentAsset+1));
-                        currentAsset = numMoved;//exits the forloop
-                        
+                        currentAsset = numMoved;//exits the forloop  
                     }
                 }
             }
