@@ -16,6 +16,8 @@ public class SimRunner {
     /**
      * @param args the command line arguments
      */
+    static int personalTransfers;
+    static int firmTransfers;
     static Random rand = new Random(2222);
     static ArrayList<ReqTransfer> reqList = new ArrayList<ReqTransfer>();
     static ArrayList<Firm> firms = new ArrayList<Firm>();
@@ -46,6 +48,7 @@ public class SimRunner {
             takeTurns();//allows firms & people to convert their capital, change pricing, pay employees, and make initial requests
             makeTransferRequests();//carries out the transfer requests and creates
             printData();
+            alterPrices();//alters all the prices for the firms. 
             
             reqList = new ArrayList<ReqTransfer>();
             marketMap = new ArrayList<Integer>();
@@ -67,6 +70,8 @@ public class SimRunner {
     
     public static void makeTransferRequests()
     {
+        personalTransfers=0;
+        firmTransfers = 0;
         int originalRequestSize = reqList.size();
         int requestIndex = 0;
         
@@ -102,7 +107,7 @@ public class SimRunner {
             avgprice/= firms.size();
             //System.out.println("");
             //System.out.println("request size: " + reqList.size()+" price: " + firms.get(10).getProductPrice() + " unitsAvailible: " + firms.get(10).getAvailableUnitsProduced() + " liquidity: " + firms.get(10).getLiquidity() + " unitsRequested: " + firms.get(10).getUnitsRequested());
-            System.out.println("Request Size:    " + reqList.size() + "    total savings:   " + (int)totalSavings + "    totalLiquidity:    " + (int)totalLiquidity +"    totalPersonalsavings:    " + (int) personalMonetary + "    total capital:    " + (int)totalCapital + "    average price :    " + avgprice);
+            System.out.println("PersonalTransfers:    " + personalTransfers + "    FirmTransfers:   " + firmTransfers + "    totalLiquidity:    " + (int)totalLiquidity +"    totalPersonalsavings:    " + (int) personalMonetary + "    total capital:    " + (int)totalCapital + "    average price :    " + avgprice);
             //System.out.println("");
     }
     
@@ -122,5 +127,13 @@ public class SimRunner {
                 marketMap.remove(turnIndex);
                 //System.out.println("maketMap size: " + marketMap.size());
             }//end of taking turns
+    }
+    
+    public static void alterPrices()
+    {
+        for(Firm current : firms)
+        {
+            current.alterPrice();
+        }
     }
 }//simRunner

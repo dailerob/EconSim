@@ -31,7 +31,7 @@ public class Person {
     public Person(int personNum)
     {
         this.personNum = personNum;
-        monetaryValue = 10000;
+        monetaryValue = 100;
         expectedIncome  = 100;
         standardSR = 10; 
         standardDB = 3;
@@ -73,7 +73,7 @@ public class Person {
         double lowestPV = 1; 
         int firmNum = 0; 
         firmsViewed.clear();
-        for(int currentFirm = 0; currentFirm < 10; currentFirm++)
+        for(int currentFirm = 0; currentFirm < 1; currentFirm++)
         {
             firmsViewed.add(SimRunner.firms.get((int)(rand.nextDouble() * (SimRunner.firms.size()-1))));
         }
@@ -96,6 +96,7 @@ public class Person {
         {
             timeSincePurchase = 0;
             SimRunner.reqList.add(new ReqTransfer(false,personNum, true, firmNum, 1));
+            SimRunner.personalTransfers++;
         }
         else{
             timeSincePurchase++;

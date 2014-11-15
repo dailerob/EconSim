@@ -56,6 +56,7 @@ public class ReqTransfer {
         Firm finalFirm = SimRunner.firms.get(finNum);
         if(!initFirm)
         {
+            SimRunner.personalTransfers++;
             Person initPerson  = SimRunner.people.get(initNum);
             if(initPerson.getMonetaryValue()>finalFirm.getProductPrice()){
                 finalFirm.incRequested(1);
@@ -67,6 +68,7 @@ public class ReqTransfer {
             
         }
         else {
+            SimRunner.firmTransfers++;
             Firm initFirm = SimRunner.firms.get(initNum);
             for (int currentAsset = 0; currentAsset < numMoved; currentAsset++)
             {
@@ -78,6 +80,7 @@ public class ReqTransfer {
                     }
                     else
                     {
+                        initFirm.makeRequests();
                         finalFirm.incRequested(numMoved-(currentAsset+1));
                         currentAsset = numMoved;//exits the forloop  
                     }

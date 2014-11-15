@@ -30,6 +30,7 @@ public class Firm {
     private int producingUnits; //used to check how many units to produce before MC greater than marketPrice. 
     private double employeeSalary; //per cycle
     private double LMUC; //lowestmarketUnitCost
+    private double capitalValue = 0;
 
     //worker production variables
     // output = employeeList.size()*(-1* Math.abs(deltaE*(employeeList.size()-maxEsize))+maxE) = x(-|b(x-a)|+c)
@@ -53,35 +54,33 @@ public class Firm {
         maxE = 2;
         deltaE = .01;
         maxEsize = 10;
-        employeeSalary = 90; 
-        UMC = .15;
+        employeeSalary = 100; 
+        UMC = .5;
         
     }
 
-    public void takeTurn() {
-        requestDeficit = unitsRequested - (int)((double)calcCapitalValue()/(double)UMC);
-        requestDeficit = unitsRequested - products.size();
-        unitsRequested = 0;
-        for(int currentEmployee: employeeList)
-        {
-            if(liquidity>= employeeSalary){
-                liquidity-=employeeSalary;
-                SimRunner.people.get(currentEmployee).changeMonetaryValue(employeeSalary);
-            }
-        }
+    public void takeTurn() {       
+        payEmployees();
         convertCapital();//add to the product what was created the previous time. 
+        makeRequests();
 
+    }
+    
+    public void alterPrice()
+    {
+        int productsInCapital = (int)(capitalValue/UMC) +(int)((double)calcCapitalValue()/(double)UMC);
+        requestDeficit = unitsRequested - productsInCapital;
+        
         //Price adjustment
-        if (requestDeficit < 0) {
+        if (requestDeficit < 0 || unitsRequested == 0) {
             decreasePrice();
         } else {
             if (requestDeficit > 0) {
                 increasePrice();
             }
         }//end of price adjustment
-
-        makeRequests();
-
+        
+        unitsRequested = 0;
     }
     
     public void makeRequests() {
@@ -148,14 +147,18 @@ public class Firm {
     
     private void convertCapital()// turns all the firm's capital into the product it produces
     {
-        double capitalValue = calcCapitalValue();
+        capitalValue += calcCapitalValue();
+        double employeeOutput = calcEmployeeOutput(employeeList.size());
+        int producingUnits = 0; 
 
         capital.clear();
 
-        while (UMC * productValue <= capitalValue) {
+        
+        while (UMC * productValue <= capitalValue && producingUnits < employeeOutput) {
             capitalValue -= (UMC * productValue);
             products.add(new Asset(firmNum,productValue,productPrice));
             availableUnitsProduced++;
+            producingUnits++;
         }
     }
 
@@ -167,11 +170,11 @@ public class Firm {
     }
 
     private void increasePrice() {
-        productPrice = Math.abs(productPrice * 1.05);
+        productPrice = Math.abs(productPrice * 1.025);
     }
 
     private void decreasePrice() {
-        productPrice = Math.abs(productPrice * .95);
+        productPrice = Math.abs(productPrice * .975);
     }
     
     
@@ -259,7 +262,28 @@ public class Firm {
     
     public int unitsAvailible()
     {
-        return products.size() + (int)(calcCapitalValue()/productPrice);
+        return products.size() + (int)(calcCapitalValue()/productPrice + capitalValue/UMC);
+    }
+    
+    public String toString()
+    {
+        return " product price: " + productPrice + " producingUnits " + producingUnits + " employees " + employeeList.size();
+    }
+    
+    private void payEmployees()
+    {
+        for(int currentEmployee = 0; currentEmployee < employeeList.size(); currentEmployee++)
+        {
+            
+            if(liquidity>= employeeSalary){
+                liquidity-=employeeSalary;
+                SimRunner.people.get(employeeList.get(currentEmployee)).changeMonetaryValue(employeeSalary);
+            }
+            else
+            {
+                employeeList.remove(currentEmployee);
+            }
+        }
     }
     
 }//class Firm
